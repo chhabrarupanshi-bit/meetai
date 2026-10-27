@@ -67,7 +67,6 @@ const GithubIcon = () => (
   </svg>
 );
 
-// Shared styling (same look + hover/focus effects as the sign-in page)
 const inputBase =
   "h-11 md:h-10 rounded-xl border border-zinc-200 bg-zinc-50/60 pl-10 text-base text-zinc-900 shadow-xs " +
   "transition-all duration-200 placeholder:text-zinc-400 sm:text-sm " +
@@ -94,12 +93,13 @@ const socialBtn =
   "dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:border-emerald-500/40 dark:hover:bg-emerald-950/40 dark:hover:text-emerald-200";
 
 export const SignUpView = () => {
-  const router = useRouter();
+   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [isPending, setIsPending] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
+  // Email/Password Registration Form
   const form = useForm({
     defaultValues: {
       firstName: "",
@@ -125,7 +125,7 @@ export const SignUpView = () => {
           {
             onSuccess: () => {
               setIsPending(false);
-              router.push("/");
+               router.push("/");
               router.refresh();
             },
             onError: (ctx) => {
@@ -141,9 +141,39 @@ export const SignUpView = () => {
     },
   });
 
+  // Separate function for OAuth/Social logins
+ const onSocial = async (provider: "github" | "google") => {
+    setError(null);
+    setIsPending(true);
+
+    try {
+      await authClient.signIn.social(
+        {
+          provider,
+          callbackURL: "/",
+        },
+        {
+          onSuccess: () => {
+            setIsPending(false);
+            router.push("/");
+            router.refresh();
+          },
+          onError: (ctx) => {
+            setIsPending(false);
+            setError(ctx.error.message || "Something went wrong.");
+          },
+        }
+      );
+    } catch {
+      setIsPending(false);
+      setError("An unexpected error occurred. Please try again.");
+    }
+  };
+
+
   return (
     <div className="relative flex min-h-[100dvh] w-full items-center justify-center overflow-hidden bg-gradient-to-br from-emerald-50 via-white to-teal-50 px-4 py-6 antialiased md:h-[100dvh] md:py-4 selection:bg-emerald-500 selection:text-white dark:from-[#04100a] dark:via-[#090a0b] dark:to-[#06140f] sm:px-6">
-      {/* ===== Full-page background ===== */}
+      {/* ===== Background Glows ===== */}
       <div className="pointer-events-none absolute inset-0 -z-0">
         <div className="absolute -left-32 -top-32 h-[420px] w-[420px] animate-pulse rounded-full bg-emerald-400/25 blur-[110px] dark:bg-emerald-600/20" />
         <div className="absolute -bottom-40 -right-32 h-[460px] w-[460px] animate-pulse rounded-full bg-teal-400/25 blur-[120px] [animation-delay:1.5s] dark:bg-teal-600/15" />
@@ -165,9 +195,11 @@ export const SignUpView = () => {
       <div className="relative z-10 flex w-full max-w-[1040px] flex-col animate-in fade-in zoom-in-95 duration-500 md:max-h-full">
         <Card className="group/card relative min-h-0 gap-0 overflow-hidden rounded-3xl border border-zinc-200/80 bg-white py-0 shadow-2xl shadow-emerald-900/10 transition-shadow duration-500 hover:shadow-emerald-900/20 dark:border-zinc-800/80 dark:bg-zinc-900 md:max-h-[680px] md:flex-auto">
           <CardContent className="grid min-h-0 flex-1 p-0 md:grid-cols-12 md:grid-rows-[minmax(0,1fr)]">
+            
             {/* ================= LEFT: FORM ================= */}
             <div className="flex min-h-0 flex-col overflow-y-auto p-6 sm:p-10 md:col-span-7 md:px-10 md:py-5 lg:px-12 [&>*:first-child]:mt-auto [&>*:last-child]:mb-auto">
-              {/* Brand */}
+              
+              {/* Brand Header */}
               <div className="group/brand flex w-fit cursor-default items-center gap-2.5 md:[@media(max-height:680px)]:hidden">
                 <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-600/10 p-1.5 ring-1 ring-emerald-600/20 transition-all duration-300 group-hover/brand:rotate-6 group-hover/brand:scale-110 group-hover/brand:bg-emerald-600/20 dark:bg-emerald-500/15">
                   <Image
@@ -411,7 +443,7 @@ export const SignUpView = () => {
                   />
                 </div>
 
-                {/* Error */}
+                {/* Error Banner */}
                 {error && (
                   <Alert className="flex items-center gap-2.5 rounded-xl border border-rose-500/20 bg-rose-50/60 p-3 text-rose-600 dark:border-rose-500/30 dark:bg-rose-950/30 dark:text-rose-400">
                     <OctagonAlertIcon className="h-4 w-4 shrink-0" />
@@ -421,7 +453,7 @@ export const SignUpView = () => {
                   </Alert>
                 )}
 
-                {/* Submit */}
+                {/* Submit Button */}
                 <Button
                   type="submit"
                   disabled={isPending}
@@ -450,14 +482,14 @@ export const SignUpView = () => {
                   <span className="h-px flex-1 bg-zinc-200 dark:bg-zinc-800" />
                 </div>
 
-                {/* Social */}
+                {/* Social Buttons */}
                 <div className="grid grid-cols-1 gap-3 min-[400px]:grid-cols-2">
                   <Button
                     variant="outline"
                     type="button"
                     disabled={isPending}
                     className={socialBtn}
-                    onClick={() => authClient.signIn.social({ provider: "google" })}
+                    onClick={() => onSocial("google")}
                   >
                     <span className="transition-transform duration-200 group-hover/social:scale-125">
                       <GoogleIcon />
@@ -469,7 +501,7 @@ export const SignUpView = () => {
                     type="button"
                     disabled={isPending}
                     className={socialBtn}
-                    onClick={() => authClient.signIn.social({ provider: "github" })}
+                    onClick={() => onSocial("github")}
                   >
                     <span className="transition-transform duration-200 group-hover/social:scale-125">
                       <GithubIcon />

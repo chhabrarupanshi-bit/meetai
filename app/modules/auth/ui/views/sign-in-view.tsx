@@ -58,7 +58,6 @@ const GithubIcon = () => (
   </svg>
 );
 
-// Shared input styling (hover + focus effects)
 const inputBase =
   "h-11 rounded-xl border border-zinc-200 bg-zinc-50/60 pl-10 text-base text-zinc-900 shadow-xs " +
   "transition-all duration-200 placeholder:text-zinc-400 sm:text-sm " +
@@ -80,7 +79,7 @@ const socialBtn =
   "dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:border-emerald-500/40 dark:hover:bg-emerald-950/40 dark:hover:text-emerald-200";
 
 export const SignInView = () => {
-  const router = useRouter();
+   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [isPending, setIsPending] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -103,12 +102,12 @@ export const SignInView = () => {
             email: value.email,
             password: value.password,
           },
-        
           {
             onSuccess: () => {
               setIsPending(false);
               router.push("/");
               router.refresh();
+             
             },
             onError: (ctx) => {
               setIsPending(false);
@@ -123,9 +122,37 @@ export const SignInView = () => {
     },
   });
 
+  const onSocial = async (provider: "github" | "google") => {
+    setError(null);
+    setIsPending(true);
+
+    try {
+      await authClient.signIn.social(
+        {
+          provider: provider,
+         
+        },
+        {
+          onSuccess: () => {
+            setIsPending(false);
+             router.push("/");
+            router.refresh();
+          },
+          onError: (ctx) => {
+            setIsPending(false);
+            setError(ctx.error.message || "Invalid credentials.");
+          },
+        }
+      );
+    } catch {
+      setIsPending(false);
+      setError("An unexpected error occurred. Please try again.");
+    }
+  };
+
   return (
     <div className="relative flex min-h-[100dvh] w-full items-center justify-center overflow-hidden bg-gradient-to-br from-emerald-50 via-white to-teal-50 px-4 py-6 antialiased selection:bg-emerald-500 selection:text-white dark:from-[#04100a] dark:via-[#090a0b] dark:to-[#06140f] sm:px-6">
-      {/* ===== Full-page background (covers the whole screen) ===== */}
+      {/* Background Elements */}
       <div className="pointer-events-none absolute inset-0 -z-0">
         <div className="absolute -left-32 -top-32 h-[420px] w-[420px] animate-pulse rounded-full bg-emerald-400/25 blur-[110px] dark:bg-emerald-600/20" />
         <div className="absolute -bottom-40 -right-32 h-[460px] w-[460px] animate-pulse rounded-full bg-teal-400/25 blur-[120px] [animation-delay:1.5s] dark:bg-teal-600/15" />
@@ -145,12 +172,12 @@ export const SignInView = () => {
       </div>
 
       <div className="relative z-10 w-full max-w-[1040px] animate-in fade-in zoom-in-95 duration-500">
-        {/* ===== Card: fixed height on laptop so no page scroll ===== */}
         <Card className="group/card relative gap-0 overflow-hidden rounded-3xl border border-zinc-200/80 bg-white/90 py-0 shadow-[0_30px_80px_-20px_rgba(6,78,59,0.25)] backdrop-blur-xl transition-all duration-500 hover:shadow-[0_40px_100px_-20px_rgba(6,78,59,0.35)] dark:border-zinc-800/80 dark:bg-zinc-900/90 md:h-[min(640px,calc(100dvh-6.5rem))]">
           <CardContent className="grid h-full p-0 md:grid-cols-12">
+            
             {/* ================= LEFT: FORM ================= */}
             <div className="flex flex-col justify-center overflow-y-auto p-6 sm:p-10 md:col-span-7 md:px-10 md:py-6 lg:px-14">
-              {/* Brand */}
+              {/* Brand Header */}
               <div className="group/brand flex w-fit cursor-default items-center gap-2.5">
                 <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-600/10 p-1.5 ring-1 ring-emerald-600/20 transition-all duration-300 group-hover/brand:rotate-6 group-hover/brand:scale-110 group-hover/brand:bg-emerald-600/20 dark:bg-emerald-500/15">
                   <Image
@@ -183,7 +210,7 @@ export const SignInView = () => {
                 }}
                 className="space-y-3.5"
               >
-                {/* Email */}
+                {/* Email Field */}
                 <form.Field
                   name="email"
                   children={(field) => {
@@ -223,7 +250,7 @@ export const SignInView = () => {
                   }}
                 />
 
-                {/* Password */}
+                {/* Password Field */}
                 <form.Field
                   name="password"
                   children={(field) => {
@@ -284,7 +311,7 @@ export const SignInView = () => {
                   }}
                 />
 
-                {/* Error */}
+                {/* Error Banner */}
                 {error && (
                   <Alert className="flex items-center gap-2.5 rounded-xl border border-rose-500/20 bg-rose-50/60 p-3 text-rose-600 dark:border-rose-500/30 dark:bg-rose-950/30 dark:text-rose-400">
                     <OctagonAlertIcon className="h-4 w-4 shrink-0" />
@@ -294,7 +321,7 @@ export const SignInView = () => {
                   </Alert>
                 )}
 
-                {/* Submit (lift + shine sweep on hover) */}
+                {/* Submit Button */}
                 <Button
                   type="submit"
                   disabled={isPending}
@@ -323,14 +350,14 @@ export const SignInView = () => {
                   <span className="h-px flex-1 bg-zinc-200 dark:bg-zinc-800" />
                 </div>
 
-                {/* Social */}
+                {/* Social Login Buttons */}
                 <div className="grid grid-cols-1 gap-3 min-[400px]:grid-cols-2">
                   <Button
                     variant="outline"
                     type="button"
                     disabled={isPending}
                     className={socialBtn}
-                    onClick={() => authClient.signIn.social({ provider: "google" })}
+                    onClick={() => onSocial("google")}
                   >
                     <span className="transition-transform duration-200 group-hover/social:scale-125">
                       <GoogleIcon />
@@ -342,7 +369,7 @@ export const SignInView = () => {
                     type="button"
                     disabled={isPending}
                     className={socialBtn}
-                    onClick={() => authClient.signIn.social({ provider: "github" })}
+                    onClick={() => onSocial("github")}
                   >
                     <span className="transition-transform duration-200 group-hover/social:scale-125">
                       <GithubIcon />
@@ -352,7 +379,7 @@ export const SignInView = () => {
                 </div>
               </form>
 
-              {/* Sign up */}
+              {/* Sign up Link */}
               <p className="mt-5 text-center text-sm text-zinc-500 dark:text-zinc-400">
                 Don&apos;t have an account?{" "}
                 <Link
@@ -367,7 +394,6 @@ export const SignInView = () => {
 
             {/* ================= RIGHT: HERO ================= */}
             <div className="relative hidden flex-col justify-between overflow-hidden bg-gradient-to-b from-[#064027] via-[#032316] to-[#01120b] p-8 text-white md:col-span-5 md:flex lg:p-10">
-              {/* Glows + grid */}
               <div className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 animate-pulse rounded-full bg-emerald-500/25 blur-[80px]" />
               <div className="pointer-events-none absolute -bottom-24 -left-20 h-64 w-64 animate-pulse rounded-full bg-teal-500/20 blur-[90px] [animation-delay:1.5s]" />
               <div
@@ -379,7 +405,6 @@ export const SignInView = () => {
                 }}
               />
 
-              {/* Security pill */}
               <div className="relative z-10">
                 <span className="inline-flex cursor-default items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 text-[11px] font-medium text-emerald-300 backdrop-blur-md transition-all duration-300 hover:border-emerald-400/50 hover:bg-emerald-500/20 hover:shadow-[0_0_20px_rgba(52,211,153,0.3)]">
                   <ShieldCheckIcon className="h-3.5 w-3.5 text-emerald-400" />
@@ -387,7 +412,6 @@ export const SignInView = () => {
                 </span>
               </div>
 
-              {/* Center */}
               <div className="relative z-10 py-4">
                 <div className="group/logo mb-5 inline-flex cursor-default rounded-2xl border border-white/10 bg-white/[0.06] p-3 shadow-2xl ring-1 ring-white/10 backdrop-blur-xl transition-all duration-500 hover:scale-105 hover:bg-white/10 hover:ring-emerald-400/40">
                   <Image
@@ -423,7 +447,6 @@ export const SignInView = () => {
                 </div>
               </div>
 
-              {/* Testimonial */}
               <div className="relative z-10 cursor-default rounded-xl border border-white/10 bg-white/[0.05] p-3.5 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-emerald-400/30 hover:bg-white/10">
                 <p className="text-xs italic leading-relaxed text-zinc-300/90">
                   &ldquo;Meet.AI reduced our post-meeting documentation time by over 80%.&rdquo;

@@ -2,31 +2,23 @@
 
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
+import { useTRPC } from "@/trpc/client";
+import { useQuery } from "@tanstack/react-query";
 
 // Session prop receive karo
-export const HomeView = ({ session }: { session: any }) => {
-  const router = useRouter();
+export const HomeView = () => {
+  const trpc = useTRPC();
+  const {data} = useQuery(trpc.hello.queryOptions({text: "Hello from TRPC!"}));
 
+  
+  
   return (
     <div className="p-4">
-      <div>
-        <p>Welcome, {session.user.name}</p>
-        <button
-          onClick={async () => {
-            await authClient.signOut({
-              fetchOptions: {
-                onSuccess: () => {
-                  router.push("/auth/sign-in");
-                  router.refresh();
-                },
-              },
-            });
-          }}
-          className="mt-2 rounded bg-red-600 px-3 py-1.5 text-white"
-        >
-          Sign out
-        </button>
-      </div>
+      {data ? (
+        <h1 className="text-xl font-bold">{data.greeting}</h1>
+      ) : (
+        <p className="text-gray-500">Loading...</p>
+      )}
     </div>
   );
-};
+}

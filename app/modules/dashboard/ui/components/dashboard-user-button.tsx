@@ -4,6 +4,7 @@ import React from "react";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { CreditCard, LogOut, ChevronRight, Star } from "lucide-react";
+import { useSidebar } from "@/components/ui/sidebar";
 
 import {
   DropdownMenu,
@@ -25,6 +26,7 @@ const DashboardUserButton = ({ initialSession }: DashboardUserButtonProps) => {
   const { data: clientSession } = authClient.useSession();
   const session = clientSession || initialSession;
   const router = useRouter();
+  const { isMobile } = useSidebar();
 
   const onLogout = async () => {
     await authClient.signOut({
@@ -44,7 +46,7 @@ const DashboardUserButton = ({ initialSession }: DashboardUserButtonProps) => {
   const userName = session.user.name || "User";
   const userEmail = session.user.email || "";
 
-  // Name ma thi first letters / initials kadhva mate
+  // User ke initials extract karne ke liye
   const initials = userName
     .split(" ")
     .map((part: string) => part[0])
@@ -54,7 +56,7 @@ const DashboardUserButton = ({ initialSession }: DashboardUserButtonProps) => {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="group flex w-full cursor-pointer items-center gap-3 rounded-xl p-1.5 outline-none transition-all hover:bg-[#002d20]">
+      <DropdownMenuTrigger className="group flex w-full cursor-pointer items-center gap-3 rounded-xl p-1.5 outline-none transition-all hover:bg-[#002d20] focus:outline-none">
         {/* Solid Bright Green Circle Avatar */}
         <div className="relative shrink-0">
           {session.user.image ? (
@@ -86,12 +88,12 @@ const DashboardUserButton = ({ initialSession }: DashboardUserButtonProps) => {
         <ChevronRight className="size-4 shrink-0 text-emerald-400/70 transition-transform group-hover:translate-x-0.5 group-hover:text-[#00e599]" />
       </DropdownMenuTrigger>
 
-      {/* Popover Dropdown */}
+      {/* Popover Dropdown: Mobile par TOP, Desktop par RIGHT */}
       <DropdownMenuContent
-        className="w-64 rounded-2xl border border-[#00d084]/30 bg-[#021e14] p-2 text-emerald-100 shadow-2xl backdrop-blur-xl"
-        align="end"
-        side="right"
-        sideOffset={12}
+        className="z-50 w-64 rounded-2xl border border-[#00d084]/30 bg-[#021e14] p-2 text-emerald-100 shadow-[0_12px_40px_rgba(0,0,0,0.8)] backdrop-blur-xl"
+        align={isMobile ? "center" : "end"}
+        side={isMobile ? "top" : "right"}
+        sideOffset={isMobile ? 12 : 10}
       >
         <DropdownMenuGroup>
           <DropdownMenuLabel className="rounded-xl border border-emerald-500/20 bg-[#003826] p-2.5 font-normal">

@@ -84,7 +84,7 @@ export const DashboardSidebar = ({ session }: DashboardSidebarProps) => {
   const router = useRouter();
 
   const renderItems = (items: NavItem[]) => (
-    <SidebarMenu className="gap-2.5">
+    <SidebarMenu className="gap-2">
       {items.map((item) => {
         const isActive = pathname === item.href;
 
@@ -94,7 +94,7 @@ export const DashboardSidebar = ({ session }: DashboardSidebarProps) => {
               onClick={() => router.push(item.href)}
               aria-current={isActive ? "page" : undefined}
               className={cn(
-                "group/item relative flex h-12 w-full cursor-pointer select-none items-center gap-3.5 overflow-hidden rounded-xl border px-3.5 text-sm font-semibold transition-all duration-300 ease-out",
+                "group/item relative flex h-11 w-full cursor-pointer select-none items-center gap-3 overflow-hidden rounded-xl border px-3 text-sm font-semibold transition-all duration-300 ease-out",
                 isActive
                   ? item.activeStyle
                   : cn(
@@ -105,13 +105,13 @@ export const DashboardSidebar = ({ session }: DashboardSidebarProps) => {
                     )
               )}
             >
-              {/* Left Glowing Accent Bar */}
+              {/* Left Accent Bar */}
               <span
                 className={cn(
                   "absolute left-0 top-1/2 -translate-y-1/2 w-1 rounded-r-full transition-all duration-300",
                   isActive
-                    ? "h-7 opacity-100"
-                    : "h-0 opacity-0 group-hover/item:h-5 group-hover/item:opacity-90 group-active/item:h-5 group-active/item:opacity-90"
+                    ? "h-6 opacity-100"
+                    : "h-0 opacity-0 group-hover/item:h-4 group-hover/item:opacity-90"
                 )}
                 style={{
                   backgroundColor: item.glowColor,
@@ -119,45 +119,42 @@ export const DashboardSidebar = ({ session }: DashboardSidebarProps) => {
                 }}
               />
 
-              {/* Shimmer Light Sweep on Hover */}
-              <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/15 to-transparent transition-transform duration-700 ease-out group-hover/item:translate-x-full group-active/item:translate-x-full" />
+              {/* Shimmer sweep */}
+              <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/15 to-transparent transition-transform duration-700 ease-out group-hover/item:translate-x-full" />
 
-              {/* Unique 3D-styled Icon Tile */}
+              {/* Icon */}
               <div
                 className={cn(
-                  "relative flex size-8.5 shrink-0 items-center justify-center rounded-lg border transition-all duration-300 shadow-sm",
+                  "relative flex size-8 shrink-0 items-center justify-center rounded-lg border transition-all duration-300 shadow-sm",
                   item.iconBg,
-                  "group-hover/item:scale-110 group-hover/item:shadow-md",
-                  "group-active/item:scale-95"
+                  "group-hover/item:scale-105"
                 )}
               >
                 <item.icon
                   className={cn(
-                    "size-4.5 stroke-[2.2] transition-transform duration-300 group-hover/item:rotate-3",
+                    "size-4 stroke-[2.2] transition-transform duration-300 group-hover/item:rotate-3",
                     item.iconColor
                   )}
                 />
               </div>
 
               {/* Label */}
-              <span className="flex-1 truncate text-left text-[13.5px] font-semibold tracking-wide text-zinc-200 transition-colors duration-200 group-hover/item:text-white group-active/item:text-white">
+              <span className="flex-1 truncate text-left text-[13px] font-semibold tracking-wide text-zinc-200 transition-colors group-hover/item:text-white">
                 {item.label}
               </span>
 
               {/* PRO Badge */}
               {item.badge && (
-                <span className="mr-1 rounded-full bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500 px-2.5 py-0.5 text-[9.5px] font-black uppercase tracking-wider text-black shadow-[0_0_14px_rgba(251,191,36,0.5)] transition-transform duration-300 group-hover/item:scale-110">
+                <span className="mr-1 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 px-2 py-0.5 text-[9px] font-black uppercase tracking-wider text-black">
                   {item.badge}
                 </span>
               )}
 
-              {/* Right Chevron with Slide Animation */}
+              {/* Chevron */}
               <ChevronRight
                 className={cn(
-                  "size-4 shrink-0 transition-all duration-300 group-hover/item:translate-x-1",
-                  isActive
-                    ? "text-white"
-                    : "text-zinc-500 group-hover/item:text-white group-active/item:text-white"
+                  "size-3.5 shrink-0 transition-all duration-300 group-hover/item:translate-x-1",
+                  isActive ? "text-white" : "text-zinc-500 group-hover/item:text-white"
                 )}
               />
             </SidebarMenuButton>
@@ -169,48 +166,49 @@ export const DashboardSidebar = ({ session }: DashboardSidebarProps) => {
 
   return (
     <Sidebar
+      collapsible="offcanvas"
       style={
         {
           "--sidebar": "#021811",
           "--sidebar-foreground": "#ecfdf5",
-          "--sidebar-border": "rgba(0, 208, 132, 0.15)",
+          "--sidebar-border": "rgba(0, 208, 132, 0.2)",
         } as React.CSSProperties
       }
-      className="w-72 border-r border-[#00d084]/20 !bg-[#021811] text-emerald-50"
+      className="border-r border-[#00d084]/20 !bg-[#021811] text-emerald-50"
     >
       <div className="flex h-full w-full flex-col !bg-[#021811] text-emerald-50">
-        {/* Brand Logo Header */}
-        <SidebarHeader className="!bg-[#021811] px-5 pt-6 pb-4">
+        
+        {/* Brand Logo Header - Top se comfortable spacing (h-16 + centered) */}
+        <SidebarHeader className="flex h-16 shrink-0 items-center border-b border-[#00d084]/20 !bg-[#021811] px-4 py-2">
           <Link
             href="/"
-            className="group flex items-center gap-3.5 transition-transform duration-200 hover:scale-[1.02] active:scale-95"
+            className="group flex w-full items-center gap-3 transition-transform duration-200 hover:scale-[1.01]"
             suppressHydrationWarning
           >
-            <div className="relative flex size-12 shrink-0 items-center justify-center rounded-2xl border border-[#00d084]/35 bg-gradient-to-b from-[#012b1d] to-[#01140e] p-2 shadow-[0_4px_20px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(0,229,153,0.2)] transition-all duration-300 group-hover:border-[#00e599]/70 group-hover:shadow-[0_0_28px_rgba(0,229,153,0.4)]">
-              <div className="pointer-events-none absolute inset-0 rounded-2xl bg-[#00e599]/15 opacity-40 blur-[4px] group-hover:opacity-100 transition-opacity" />
+            <div className="relative flex size-10 shrink-0 items-center justify-center rounded-xl border border-[#00d084]/35 bg-gradient-to-b from-[#012b1d] to-[#01140e] p-2 shadow-md transition-all group-hover:border-[#00e599]/70">
               <Image
                 src="/logo.png"
                 alt="Logo"
-                width={28}
-                height={28}
-                className="relative z-10 size-7 object-contain drop-shadow-[0_0_10px_rgba(0,229,153,0.5)] transition-transform duration-300 group-hover:scale-110"
+                width={22}
+                height={22}
+                className="relative z-10 size-5.5 object-contain drop-shadow-[0_0_8px_rgba(0,229,153,0.5)]"
                 priority
               />
             </div>
 
-            <div className="flex flex-col">
-              <span className="text-xl font-extrabold tracking-tight text-white drop-shadow-sm transition-colors group-hover:text-emerald-200">
+            <div className="flex min-w-0 flex-col">
+              <span className="truncate text-base font-extrabold tracking-tight text-white group-hover:text-emerald-200 leading-tight">
                 Meet.AI
               </span>
-              <span className="text-[10px] font-bold tracking-[0.16em] text-emerald-300/60 uppercase">
+              <span className="truncate text-[9.5px] font-bold tracking-[0.14em] text-emerald-300/65 uppercase mt-0.5">
                 AI MEETINGS. SIMPLIFIED.
               </span>
             </div>
           </Link>
         </SidebarHeader>
 
-        {/* Main Navigation */}
-        <SidebarContent className="!bg-[#021811] px-3.5 pt-2">
+        {/* Content */}
+        <SidebarContent className="!bg-[#021811] px-3 pt-3">
           <SidebarGroup className="p-0">
             <SectionLabel>MAIN</SectionLabel>
             <SidebarGroupContent className="pt-1">
@@ -218,14 +216,12 @@ export const DashboardSidebar = ({ session }: DashboardSidebarProps) => {
             </SidebarGroupContent>
           </SidebarGroup>
 
-          {/* Divider with Center Glowing Node */}
-          <div className="my-5 px-1">
+          <div className="my-4 px-1">
             <div className="relative h-px w-full bg-gradient-to-r from-transparent via-[#00e599]/30 to-transparent">
-              <span className="absolute left-1/2 top-1/2 size-1 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#00e599] shadow-[0_0_8px_#00e599]" />
+              <span className="absolute left-1/2 top-1/2 size-1 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#00e599]" />
             </div>
           </div>
 
-          {/* Account Section */}
           <SidebarGroup className="p-0">
             <SectionLabel>ACCOUNT</SectionLabel>
             <SidebarGroupContent className="pt-1">
@@ -233,31 +229,31 @@ export const DashboardSidebar = ({ session }: DashboardSidebarProps) => {
             </SidebarGroupContent>
           </SidebarGroup>
 
-          {/* Upgrade Card with Hover Glow */}
-          <div className="group/card mt-6 rounded-2xl border border-[#00d084]/35 bg-[#002d20]/80 p-4 shadow-[0_0_24px_rgba(0,208,132,0.12)] transition-all duration-300 hover:border-[#00e599]/60 hover:shadow-[0_0_30px_rgba(0,229,153,0.22)]">
-            <div className="flex items-center gap-2.5 mb-2">
-              <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-[#00a368] text-white shadow-sm transition-transform duration-300 group-hover/card:scale-110">
-                <Star className="size-4 fill-white text-white" />
+          {/* Upgrade Card */}
+          <div className="group/card mt-4 rounded-xl border border-[#00d084]/35 bg-[#002d20]/80 p-3.5 shadow-sm transition-all hover:border-[#00e599]/60">
+            <div className="mb-1.5 flex items-center gap-2">
+              <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-[#00a368] text-white">
+                <Star className="size-3.5 fill-white text-white" />
               </span>
-              <span className="text-sm font-bold text-white">Upgrade to Pro</span>
+              <span className="text-xs font-bold text-white">Upgrade to Pro</span>
             </div>
 
-            <p className="text-[12px] leading-relaxed text-emerald-200/75 mb-4">
-              Unlock more AI agents, meetings, priority support and more.
+            <p className="mb-3 text-[11px] leading-relaxed text-emerald-200/75">
+              Unlock more AI agents, meetings and priority support.
             </p>
 
             <button
               onClick={() => router.push("/upgrades")}
-              className="flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-xl bg-[#00e599] py-2.5 text-xs font-bold text-[#01261a] shadow-[0_0_16px_rgba(0,229,153,0.35)] transition-all duration-300 hover:bg-[#00f5a4] hover:shadow-[0_0_24px_rgba(0,229,153,0.55)] active:scale-95"
+              className="flex w-full cursor-pointer items-center justify-center gap-1 rounded-lg bg-[#00e599] py-2 text-[11px] font-bold text-[#01261a] transition-all hover:bg-[#00f5a4]"
             >
               <span>Explore Plans</span>
-              <ChevronRight className="size-4 stroke-[2.5] transition-transform duration-200 group-hover/card:translate-x-0.5" />
+              <ChevronRight className="size-3.5 stroke-[2.5]" />
             </button>
           </div>
         </SidebarContent>
 
-        {/* Profile Footer */}
-        <SidebarFooter className="border-t border-[#00d084]/15 !bg-[#01140e] p-3.5">
+        {/* Footer */}
+        <SidebarFooter className="border-t border-[#00d084]/15 !bg-[#01140e] p-3">
           <DashboardUserButton initialSession={session} />
         </SidebarFooter>
       </div>

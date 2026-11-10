@@ -94,6 +94,35 @@ export const accountRelations = relations(account, ({ one }) => ({
   }),
 }));
 
+export const agents = pgTable("agents", {
+    id:text("id").primaryKey().$defaultFn(() => nanoid()),
+    name: text("name").notNull(),
+    userId: text("user_id").notNull().references(() => user.id , {
+        onDelete: "cascade"}),
+        instructions : text("instructions").notNull(),
+        createdAt: timestamp("created_at").defaultNow().notNull(),
+        updatedAt: timestamp("updated_at").notNull().defaultNow(),
+    })
+
+    
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // Ise hata dein userId column exist hi nahi karta.:
 // export const verificationRelations = relations(verification, ({ one }) => ({
 //   user: one(user, {

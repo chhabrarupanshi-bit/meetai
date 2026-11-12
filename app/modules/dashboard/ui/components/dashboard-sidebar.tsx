@@ -164,7 +164,7 @@ export const DashboardSidebar = ({ session }: DashboardSidebarProps) => {
     </SidebarMenu>
   );
 
-  return (
+return (
     <Sidebar
       collapsible="offcanvas"
       style={
@@ -174,89 +174,85 @@ export const DashboardSidebar = ({ session }: DashboardSidebarProps) => {
           "--sidebar-border": "rgba(0, 208, 132, 0.2)",
         } as React.CSSProperties
       }
-      className="border-r border-[#00d084]/20 !bg-[#021811] text-emerald-50"
+      className="border-r border-[#00d084]/20 !bg-[#021811] text-emerald-50 h-screen"
     >
-      <div className="flex h-full w-full flex-col !bg-[#021811] text-emerald-50">
-        
-        {/* Brand Logo Header - Top se comfortable spacing (h-16 + centered) */}
-        <SidebarHeader className="flex h-16 shrink-0 items-center border-b border-[#00d084]/20 !bg-[#021811] px-4 py-2">
-          <Link
-            href="/"
-            className="group flex w-full items-center gap-3 transition-transform duration-200 hover:scale-[1.01]"
-            suppressHydrationWarning
+      {/* Brand Logo Header */}
+      <SidebarHeader className="flex h-16 shrink-0 items-center border-b border-[#00d084]/20 !bg-[#021811] px-4 py-2">
+        <Link
+          href="/"
+          className="group flex w-full items-center gap-3 transition-transform duration-200 hover:scale-[1.01]"
+          suppressHydrationWarning
+        >
+          <div className="relative flex size-10 shrink-0 items-center justify-center rounded-xl border border-[#00d084]/35 bg-gradient-to-b from-[#012b1d] to-[#01140e] p-2 shadow-md transition-all group-hover:border-[#00e599]/70">
+            <Image
+              src="/logo.png"
+              alt="Logo"
+              width={22}
+              height={22}
+              className="relative z-10 size-5.5 object-contain drop-shadow-[0_0_8px_rgba(0,229,153,0.5)]"
+              priority
+            />
+          </div>
+
+          <div className="flex min-w-0 flex-col">
+            <span className="truncate text-base font-extrabold tracking-tight text-white group-hover:text-emerald-200 leading-tight">
+              Meet.AI
+            </span>
+            <span className="truncate text-[9.5px] font-bold tracking-[0.14em] text-emerald-300/65 uppercase mt-0.5">
+              AI MEETINGS. SIMPLIFIED.
+            </span>
+          </div>
+        </Link>
+      </SidebarHeader>
+
+      {/* Content - flex-1 ensure karta hai ki footer hamesha bottom me rahe */}
+      <SidebarContent className="!bg-[#021811] px-3 pt-3 flex-1 overflow-y-auto">
+        <SidebarGroup className="p-0">
+          <SectionLabel>MAIN</SectionLabel>
+          <SidebarGroupContent className="pt-1">
+            {renderItems(mainSection)}
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <div className="my-4 px-1">
+          <div className="relative h-px w-full bg-gradient-to-r from-transparent via-[#00e599]/30 to-transparent">
+            <span className="absolute left-1/2 top-1/2 size-1 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#00e599]" />
+          </div>
+        </div>
+
+        <SidebarGroup className="p-0">
+          <SectionLabel>ACCOUNT</SectionLabel>
+          <SidebarGroupContent className="pt-1">
+            {renderItems(accountSection)}
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        {/* Upgrade Card */}
+        <div className="group/card mt-4 rounded-xl border border-[#00d084]/35 bg-[#002d20]/80 p-3.5 shadow-sm transition-all hover:border-[#00e599]/60">
+          <div className="mb-1.5 flex items-center gap-2">
+            <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-[#00a368] text-white">
+              <Star className="size-3.5 fill-white text-white" />
+            </span>
+            <span className="text-xs font-bold text-white">Upgrade to Pro</span>
+          </div>
+
+          <p className="mb-3 text-[11px] leading-relaxed text-emerald-200/75">
+            Unlock more AI agents, meetings and priority support.
+          </p>
+
+          <button
+            onClick={() => router.push("/upgrades")}
+            className="flex w-full cursor-pointer items-center justify-center gap-1 rounded-lg bg-[#00e599] py-2 text-[11px] font-bold text-[#01261a] transition-all hover:bg-[#00f5a4]"
           >
-            <div className="relative flex size-10 shrink-0 items-center justify-center rounded-xl border border-[#00d084]/35 bg-gradient-to-b from-[#012b1d] to-[#01140e] p-2 shadow-md transition-all group-hover:border-[#00e599]/70">
-              <Image
-                src="/logo.png"
-                alt="Logo"
-                width={22}
-                height={22}
-                className="relative z-10 size-5.5 object-contain drop-shadow-[0_0_8px_rgba(0,229,153,0.5)]"
-                priority
-              />
-            </div>
+            <span>Explore Plans</span>
+            <ChevronRight className="size-3.5 stroke-[2.5]" />
+          </button>
+        </div>
+      </SidebarContent>
 
-            <div className="flex min-w-0 flex-col">
-              <span className="truncate text-base font-extrabold tracking-tight text-white group-hover:text-emerald-200 leading-tight">
-                Meet.AI
-              </span>
-              <span className="truncate text-[9.5px] font-bold tracking-[0.14em] text-emerald-300/65 uppercase mt-0.5">
-                AI MEETINGS. SIMPLIFIED.
-              </span>
-            </div>
-          </Link>
-        </SidebarHeader>
-
-        {/* Content */}
-        <SidebarContent className="!bg-[#021811] px-3 pt-3">
-          <SidebarGroup className="p-0">
-            <SectionLabel>MAIN</SectionLabel>
-            <SidebarGroupContent className="pt-1">
-              {renderItems(mainSection)}
-            </SidebarGroupContent>
-          </SidebarGroup>
-
-          <div className="my-4 px-1">
-            <div className="relative h-px w-full bg-gradient-to-r from-transparent via-[#00e599]/30 to-transparent">
-              <span className="absolute left-1/2 top-1/2 size-1 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#00e599]" />
-            </div>
-          </div>
-
-          <SidebarGroup className="p-0">
-            <SectionLabel>ACCOUNT</SectionLabel>
-            <SidebarGroupContent className="pt-1">
-              {renderItems(accountSection)}
-            </SidebarGroupContent>
-          </SidebarGroup>
-
-          {/* Upgrade Card */}
-          <div className="group/card mt-4 rounded-xl border border-[#00d084]/35 bg-[#002d20]/80 p-3.5 shadow-sm transition-all hover:border-[#00e599]/60">
-            <div className="mb-1.5 flex items-center gap-2">
-              <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-[#00a368] text-white">
-                <Star className="size-3.5 fill-white text-white" />
-              </span>
-              <span className="text-xs font-bold text-white">Upgrade to Pro</span>
-            </div>
-
-            <p className="mb-3 text-[11px] leading-relaxed text-emerald-200/75">
-              Unlock more AI agents, meetings and priority support.
-            </p>
-
-            <button
-              onClick={() => router.push("/upgrades")}
-              className="flex w-full cursor-pointer items-center justify-center gap-1 rounded-lg bg-[#00e599] py-2 text-[11px] font-bold text-[#01261a] transition-all hover:bg-[#00f5a4]"
-            >
-              <span>Explore Plans</span>
-              <ChevronRight className="size-3.5 stroke-[2.5]" />
-            </button>
-          </div>
-        </SidebarContent>
-
-        {/* Footer */}
-        <SidebarFooter className="border-t border-[#00d084]/15 !bg-[#01140e] p-3">
-          <DashboardUserButton initialSession={session} />
-        </SidebarFooter>
-      </div>
+      {/* Footer - mt-auto se hamesha perfectly bottom pinned rahega */}
+      <SidebarFooter className="mt-auto border-t border-[#00d084]/15 !bg-[#01140e] p-3">
+        <DashboardUserButton initialSession={session} />
+      </SidebarFooter>
     </Sidebar>
-  );
-};
+  );}

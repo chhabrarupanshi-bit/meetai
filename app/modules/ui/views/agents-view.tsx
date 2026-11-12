@@ -5,6 +5,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { ErrorBoundary } from "react-error-boundary";
 import { LoadingState } from "@/components/ui/loading-state";
 import { ErrorState } from "@/components/ui/error-state";
+import { ResponsiveDialog } from "@/components/ui/responsive-dialog";
 
 export const AgentsView = () => {
     const trpc = useTRPC();
@@ -14,6 +15,7 @@ export const AgentsView = () => {
 
     return (
         <div>
+
             {JSON.stringify(data, null, 2)}
         </div>
     );

@@ -1,31 +1,28 @@
 "use client";
 
-import * as React from "react";
+import { Bot } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
-
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
 } from "@/components/ui/dialog";
-
 import {
   Drawer,
   DrawerContent,
+  DrawerDescription,
   DrawerHeader,
   DrawerTitle,
-  DrawerDescription,
 } from "@/components/ui/drawer";
 
 interface ResponsiveDialogProps {
   title: string;
-  description?: string;
+  description: string;
   children: React.ReactNode;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  className?: string;
 }
 
 export const ResponsiveDialog = ({
@@ -34,55 +31,53 @@ export const ResponsiveDialog = ({
   children,
   open,
   onOpenChange,
-  className,
 }: ResponsiveDialogProps) => {
   const isMobile = useIsMobile();
 
-  // Mobile View: Bottom Sheet / Drawer with smooth drag & safe-area padding
   if (isMobile) {
     return (
       <Drawer open={open} onOpenChange={onOpenChange}>
-        <DrawerContent className="max-h-[90vh] focus:outline-none rounded-t-[20px] border-t bg-background">
-          <DrawerHeader className="text-left px-5 pt-3 pb-2 border-b border-border/40">
-            <DrawerTitle className="text-lg font-semibold tracking-tight text-foreground">
-              {title}
-            </DrawerTitle>
-            {description && (
-              <DrawerDescription className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
-                {description}
-              </DrawerDescription>
-            )}
+        <DrawerContent className="bg-white text-slate-900">
+          <DrawerHeader className="border-b border-slate-100 pb-4 text-left">
+            <div className="flex items-center gap-3">
+              <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-600">
+                <Bot className="size-5" />
+              </div>
+              <div>
+                <DrawerTitle className="text-lg font-bold tracking-tight text-slate-900">
+                  {title}
+                </DrawerTitle>
+                <DrawerDescription className="text-xs text-slate-500 mt-0.5">
+                  {description}
+                </DrawerDescription>
+              </div>
+            </div>
           </DrawerHeader>
-
-          {/* Scrollable container for mobile forms/keyboards */}
-          <div className="p-5 overflow-y-auto max-h-[calc(90vh-100px)]">
-            {children}
-          </div>
+          <div className="p-4">{children}</div>
         </DrawerContent>
       </Drawer>
     );
   }
 
-  // Desktop View: Polished Modal with clean borders, shadows & structured spacing
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent 
-        className={`sm:max-w-[480px] p-0 overflow-hidden rounded-2xl border border-border/60 shadow-2xl bg-background/95 backdrop-blur-sm duration-200 ${className ?? ""}`}
-      >
-        <DialogHeader className="px-6 pt-6 pb-4 border-b border-border/40 space-y-1">
-          <DialogTitle className="text-xl font-semibold tracking-tight text-foreground">
-            {title}
-          </DialogTitle>
-          {description && (
-            <DialogDescription className="text-sm text-muted-foreground leading-relaxed">
-              {description}
-            </DialogDescription>
-          )}
+      <DialogContent className="bg-white text-slate-900 sm:max-w-[480px] p-6 rounded-2xl border border-slate-200 shadow-2xl">
+        <DialogHeader className="border-b border-slate-100 pb-4">
+          <div className="flex items-center gap-3.5">
+            <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-600 text-white shadow-sm shadow-emerald-600/20">
+              <Bot className="size-5" />
+            </div>
+            <div className="text-left">
+              <DialogTitle className="text-lg font-bold tracking-tight text-slate-900">
+                {title}
+              </DialogTitle>
+              <DialogDescription className="text-xs text-slate-500 mt-0.5">
+                {description}
+              </DialogDescription>
+            </div>
+          </div>
         </DialogHeader>
-
-        <div className="p-6 max-h-[80vh] overflow-y-auto">
-          {children}
-        </div>
+        {children}
       </DialogContent>
     </Dialog>
   );

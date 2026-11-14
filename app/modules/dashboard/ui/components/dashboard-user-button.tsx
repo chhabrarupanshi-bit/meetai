@@ -3,7 +3,7 @@
 import React from "react";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
-import { CreditCard, LogOut, ChevronRight, Star } from "lucide-react";
+import { CreditCard, LogOut, ChevronRight, Star, LogIn } from "lucide-react";
 import { useSidebar } from "@/components/ui/sidebar";
 
 import {
@@ -39,8 +39,25 @@ const DashboardUserButton = ({ initialSession }: DashboardUserButtonProps) => {
     });
   };
 
+  // Jab user logged in na ho (Guest state)
   if (!session?.user) {
-    return null;
+    return (
+      <button
+        onClick={() => router.push("/auth/sign-in")}
+        className="flex w-full cursor-pointer items-center justify-between rounded-xl border border-[#00d084]/20 bg-[#002d20]/50 p-2 text-left transition-all hover:border-[#00e599]/40 hover:bg-[#002d20]"
+      >
+        <div className="flex items-center gap-3">
+          <div className="flex size-9 items-center justify-center rounded-lg bg-[#00e599]/15 text-[#00e599]">
+            <LogIn className="size-4" />
+          </div>
+          <div className="flex flex-col">
+            <span className="text-xs font-bold text-white">Sign In</span>
+            <span className="text-[10px] text-emerald-300/60">Access your account</span>
+          </div>
+        </div>
+        <ChevronRight className="size-4 text-emerald-400/50" />
+      </button>
+    );
   }
 
   const userName = session.user.name || "User";
@@ -88,7 +105,7 @@ const DashboardUserButton = ({ initialSession }: DashboardUserButtonProps) => {
         <ChevronRight className="size-4 shrink-0 text-emerald-400/70 transition-transform group-hover:translate-x-0.5 group-hover:text-[#00e599]" />
       </DropdownMenuTrigger>
 
-      {/* Popover Dropdown: Mobile par TOP, Desktop par RIGHT */}
+      {/* Popover Dropdown */}
       <DropdownMenuContent
         className="z-50 w-64 rounded-2xl border border-[#00d084]/30 bg-[#021e14] p-2 text-emerald-100 shadow-[0_12px_40px_rgba(0,0,0,0.8)] backdrop-blur-xl"
         align={isMobile ? "center" : "end"}

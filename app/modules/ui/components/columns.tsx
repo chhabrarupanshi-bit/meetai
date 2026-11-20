@@ -36,14 +36,14 @@ export const columns = columnHelper.columns([
   }),
     columnHelper.accessor("meetingCount", {
         header: "Meetings",
-        cell: () => (
+        cell: ({row}) => (
             <div className="flex justify-end">
                 <Badge
                    variant="outline"
           className="flex items-center gap-x-2 rounded-full border-emerald-800/25 bg-emerald-950/10 px-3 py-1 text-xs font-semibold text-emerald-950 [&>svg]:size-3.5"
                 >
                     <VideoIcon className="text-emerald-800" />
-                    5 meetings
+                    {row.original.meetingCount} {row.original.meetingCount === 1 ? "meeting" : "meetings"}
                 </Badge>
             </div>
         ),

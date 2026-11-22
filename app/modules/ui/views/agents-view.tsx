@@ -9,16 +9,20 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { DataTable } from "../components/data-table";
 import { columns } from "../components/columns";
 import { useAgentsFilters } from "../../agents/hooks/use-agents-filters";
-import {DataPagination} from "../components/data-pagination";
+import { DataPagination } from "../components/data-pagination";
+import { useRouter } from "next/navigation";
 
 export const AgentsView = () => {
+
+    const router = useRouter();
+
     const trpc = useTRPC();
 
-    const [filters , setFilters] = useAgentsFilters();
+    const [filters, setFilters] = useAgentsFilters();
 
     const { data } = useSuspenseQuery(
         trpc.agents.getMany.queryOptions({
-             ...filters ,
+            ...filters,
 
         })
     );
@@ -31,11 +35,17 @@ export const AgentsView = () => {
                     description="Create an agent to join your meetings. Each agent will follow your instructions and interact with participants during the call."
                 />
             ) : (
-                <><DataTable data={data.items} columns={columns} 
-                /><DataPagination
-                page = {filters.page}
-                totalPages = {data.totalPages}
-                onPageChange={(page) => setFilters({page})} />
+                <>
+                    <DataTable
+                        data={data.items}
+                        columns={columns}
+                        onRowClick={(row) => router.push(`/agents/${row.id}`)}
+                    />
+                    <DataPagination
+                        page={filters.page}
+                        totalPages={data.totalPages}
+                        onPageChange={(page) => setFilters({ page })}
+                    />
                 </>
 
             )}

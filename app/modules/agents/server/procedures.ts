@@ -5,18 +5,26 @@ import { and, count, desc, eq, getTableColumns, ilike, sql } from "drizzle-orm";
 import { z } from "zod";
 import { agentsInsertSchema } from "../schema";
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE, MAX_PAGE_SIZE, MIN_PAGE_SIZE } from "../../../constants";
+import { TRPCError } from "@trpc/server";
 
 export const agentsRouter = createTRPCRouter({
   getOne: protectedProcedure
     .input(z.object({ id: z.string() }))
-    .query(async ({ input }) => {
+    .query(async ({ input , ctx }) => {
       const [existingAgent] = await db
         .select({
           ...getTableColumns(agents),
           meetingCount: sql<number>`1`,
         })
         .from(agents)
-        .where(eq(agents.id, input.id));
+        .where( and(eq(agents.id, input.id), eq(agents.userId, ctx.auth.user.id)));
+
+        if (!existingAgent) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Agent not found",
+          });
+        }
 
       return existingAgent;
     }),

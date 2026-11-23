@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTRPC } from "@/trpc/client";
@@ -27,21 +26,37 @@ export const AgentForm = ({
   onCancel,
   initialValues,
 }: AgentFormProps) => {
-  const router = useRouter();
   const queryClient = useQueryClient();
   const trpc = useTRPC();
 
-  const createagent = useMutation(
+  const createAgent = useMutation(
     trpc.agents.create.mutationOptions({
       onSuccess: async () => {
         await queryClient.invalidateQueries(
           trpc.agents.getMany.queryOptions({}),
         );
+
+        onSuccess?.();
+      },
+      onError: (error) => {
+        toast.error(error.message);
+      },
+    }),
+  );
+
+  const updateAgent = useMutation(
+    trpc.agents.update.mutationOptions({
+      onSuccess: async () => {
+        await queryClient.invalidateQueries(
+          trpc.agents.getMany.queryOptions({}),
+        );
+
         if (initialValues?.id) {
           await queryClient.invalidateQueries(
             trpc.agents.getOne.queryOptions({ id: initialValues.id }),
           );
         }
+
         onSuccess?.();
       },
       onError: (error) => {
@@ -53,20 +68,20 @@ export const AgentForm = ({
   const form = useForm<z.infer<typeof agentsInsertSchema>>({
     resolver: zodResolver(agentsInsertSchema),
     defaultValues: {
-      name: initialValues?.name || "",
-      instructions: initialValues?.instructions || "",
+      name: initialValues?.name ?? "",
+      instructions: initialValues?.instructions ?? "",
     },
   });
 
   const isEdit = !!initialValues?.id;
-  const isPending = createagent.isPending;
+  const isPending = createAgent.isPending || updateAgent.isPending;
   const watchedName = form.watch("name");
 
-  const onSubmit = async (values: z.infer<typeof agentsInsertSchema>) => {
+  const onSubmit = (values: z.infer<typeof agentsInsertSchema>) => {
     if (isEdit) {
-      console.log("Edit functionality not implemented yet");
+      updateAgent.mutate({ ...values, id: initialValues.id });
     } else {
-      createagent.mutate(values);
+      createAgent.mutate(values);
     }
   };
 

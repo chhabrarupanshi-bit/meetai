@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { pgTable, text, timestamp, boolean, index, integer, varchar } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, boolean, index, integer, varchar , pgEnum } from "drizzle-orm/pg-core";
 import { nanoid } from "nanoid";
 
 export const user = pgTable("user", {
@@ -77,36 +77,64 @@ export const verification = pgTable(
 )
 
 export const userRelations = relations(user, ({ many }) => ({
-  sessions: many(session),
-  accounts: many(account),
+    sessions: many(session),
+    accounts: many(account),
 }));
 
 export const sessionRelations = relations(session, ({ one }) => ({
-  user: one(user, {
-    fields: [session.userId],
-    references: [user.id],
-  }),
+    user: one(user, {
+        fields: [session.userId],
+        references: [user.id],
+    }),
 }));
 
 export const accountRelations = relations(account, ({ one }) => ({
-  user: one(user, {
-    fields: [account.userId],
-    references: [user.id],
-  }),
+    user: one(user, {
+        fields: [account.userId],
+        references: [user.id],
+    }),
 }));
 
 export const agents = pgTable("agents", {
-    id:text("id").primaryKey().$defaultFn(() => nanoid()),
+    id: text("id").primaryKey().$defaultFn(() => nanoid()),
     name: text("name").notNull(),
-    userId: text("user_id").notNull().references(() => user.id , {
-        onDelete: "cascade"}),
-        instructions : text("instructions").notNull(),
-        createdAt: timestamp("created_at").defaultNow().notNull(),
-        updatedAt: timestamp("updated_at").notNull().defaultNow(),
-    })
+    userId: text("user_id").notNull().references(() => user.id, {
+        onDelete: "cascade"
+    }),
+    instructions: text("instructions").notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").notNull().defaultNow(),
+})
 
-    
-   
+export const meetingStatus = pgEnum("meeting_status", [
+    "upcoming",
+    "active",
+    "completed",
+    "cancelled",
+    "processing"
+]);
+
+export const meetings = pgTable("meetings", {
+    id: text("id").primaryKey().$defaultFn(() => nanoid()),
+    name: text("name").notNull(),
+    userId: text("user_id").notNull().references(() => user.id, {
+        onDelete: "cascade"
+    }),
+    agentId: text("agent_id").notNull().references(() => agents.id, { onDelete: "cascade" }),
+    status: meetingStatus("status").notNull().default("upcoming"),
+    startedAt: timestamp("startedAt"),
+    endedAt: timestamp("endedAt"),
+    transcriptUrl: text("transcript_url"),
+    recordingUrl: text("recording_url"),
+    summary: text("summary"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").notNull().defaultNow(),
+})
+
+
+
+
+
 
 
 

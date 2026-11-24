@@ -40,7 +40,7 @@ const mainSection: NavItem[] = [
   {
     icon: Video,
     label: "Meetings",
-    href: "/meetings",
+    href: "/meeting",
     iconColor: "text-cyan-300",
     iconBg: "bg-cyan-500/15 border-cyan-400/30",
     glowColor: "#22d3ee",

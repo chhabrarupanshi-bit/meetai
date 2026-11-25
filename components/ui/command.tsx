@@ -84,19 +84,22 @@ interface CommandResponsiveDialogProps {
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
   className?: string;
+  shouldFilter?: boolean;
 }
 
 function CommandResponsiveDialog({
   title = "Command Palette",
   description = "Search for a command to run...",
+  shouldFilter = true,
   children,
   open,
   onOpenChange,
 }: CommandResponsiveDialogProps) {
   const isMobile = useIsMobile();
 
-const commandClasses =
-  "[&_[cmdk-group-heading]]:text-muted-foreground **:data-[slot=command-input-wrapper]:h-12 [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group]]:px-2 [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-3 [&_[cmdk-item]]:py-2.5 [&_[cmdk-item]_svg]:h-4 [&_[cmdk-item]_svg]:w-4 bg-white text-neutral-900";
+  const commandClasses =
+    "[&_[cmdk-group-heading]]:text-muted-foreground **:data-[slot=command-input-wrapper]:h-12 [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group]]:px-2 [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-3 [&_[cmdk-item]]:py-2.5 [&_[cmdk-item]_svg]:h-4 [&_[cmdk-item]_svg]:w-4 bg-white text-neutral-900";
+
   if (isMobile) {
     return (
       <Drawer open={open} onOpenChange={onOpenChange}>
@@ -105,7 +108,7 @@ const commandClasses =
             <DrawerTitle>{title}</DrawerTitle>
             <DrawerDescription>{description}</DrawerDescription>
           </DrawerHeader>
-          <Command className={commandClasses}>
+          <Command shouldFilter={shouldFilter} className={commandClasses}>
             {children}
           </Command>
         </DrawerContent>
@@ -115,12 +118,12 @@ const commandClasses =
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogHeader className="sr-only">
-        <DialogTitle>{title}</DialogTitle>
-        <DialogDescription>{description}</DialogDescription>
-      </DialogHeader>
       <DialogContent className="overflow-hidden p-0 bg-white text-neutral-900 rounded-2xl shadow-2xl border border-neutral-200 max-w-[520px] top-[20%] translate-y-0">
-        <Command className={commandClasses}>
+        <DialogHeader className="sr-only">
+          <DialogTitle>{title}</DialogTitle>
+          <DialogDescription>{description}</DialogDescription>
+        </DialogHeader>
+        <Command shouldFilter={shouldFilter} className={commandClasses}>
           {children}
         </Command>
       </DialogContent>

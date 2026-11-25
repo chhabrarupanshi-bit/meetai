@@ -13,7 +13,7 @@ export const MeetingView = () => {
 
   return (
     <div className="flex-1 pb-4 px-4 md:px-8 flex flex-col gap-4">
-      {JSON.stringify(data)}
+     {JSON.stringify(data)}
     </div>
   );
 };

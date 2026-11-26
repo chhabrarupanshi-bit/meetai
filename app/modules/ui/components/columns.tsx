@@ -6,9 +6,10 @@ import { CornerDownRightIcon, VideoIcon } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { GeneratedAvatar } from "../../../../components/ui/generated-avatar"
 import { AgentGetOne } from "../type"
-import { type DataTableFeatures } from "./data-table-features"
+import {AgentsGetMany} from "../../ui/type"
+import { type DataTableFeatures } from "../../meetings/ui/components/data-table-features"
 
-const columnHelper = createColumnHelper<DataTableFeatures, AgentGetOne>()
+const columnHelper = createColumnHelper<DataTableFeatures, AgentsGetMany[number]>()
 
 export const columns = columnHelper.columns([
   columnHelper.accessor("name", {

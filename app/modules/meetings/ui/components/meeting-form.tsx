@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTRPC } from "@/trpc/client";
-import { MeetingGetOne } from "../type";
+import { MeetingGetOne } from "../../type";
 import { meetingsInsertSchema } from "../../schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";

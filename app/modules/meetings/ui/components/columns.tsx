@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils";
 import { GeneratedAvatar } from "@/components/ui/generated-avatar";
 
 import { type DataTableFeatures } from "./data-table-features";
-import { MeetingGetMany } from "../type";
+import { MeetingGetMany } from "../../type";
 
 function formatDuration(seconds: number) {
   return humanizeDuration(seconds * 1000, {
